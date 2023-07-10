@@ -20,17 +20,26 @@ def get_completion(prompt, model="gpt-4-0613"):
         temperature=0, 
     )
     return response.choices[0].message["content"]
-text = st.text_area("enter text to translate")
+st.markdown("#### Text to Translate")
+text = st.text_area("enter text to translate", label_visibility="collapsed")
 
 if "saved_styles" not in st.session_state:
     st.session_state.saved_styles = []
 
 # Display styles in a dropdown
-selected_style = st.selectbox('Your saved languages and style directions', [''] + st.session_state.saved_styles)
-style = st.text_area("enter translation directions", value=selected_style)
+with st.sidebar:
+    st.markdown("### Saved Styles")
+    selected_style = st.selectbox("", [''] + st.session_state.saved_styles)
+    
+st.markdown("#### Language or Style Directions")
+style = st.text_area("enter language or character or style to translate to", value=selected_style, label_visibility="collapsed")
 
 if style and style not in st.session_state.saved_styles:
     st.session_state.saved_styles.append(style)
+    
+col1, col2, col3 = st.columns([3,3,1])
+with col3:
+    translate_button = st.button("Translate")
     
 st.divider()
 
@@ -61,21 +70,26 @@ if "responses" not in st.session_state:
     st.session_state.responses = []
 
 
-if text:
-    if style:     
-        st.session_state.text.append(text)
-        st.session_state.style.append(style)
-        
-        translated_response = chat(formatted_text)
-        response = translated_response.content
-        st.session_state.responses.append(response)
+if translate_button:
+    if text:
+        if style:     
+            st.session_state.text.append(text)
+            st.session_state.style.append(style)
 
-        for i in range(len(st.session_state.responses)):
-            with st.expander(f'{st.session_state.style[i]}', expanded=False):
-                st.text('FROM:')
-                st.write(st.session_state.text[i])
-                st.text('TO:')
-                st.write(st.session_state.style[i])
-                st.text('TRANSLATION:')
-                response_text = st.session_state.responses[i].replace('```', '')
-                st.write(response_text)  
+            translated_response = chat(formatted_text)
+            response = translated_response.content
+            st.session_state.responses.append(response)
+
+            for i in range(len(st.session_state.responses)):
+                with st.expander(f'{st.session_state.style[i]}', expanded=False):
+                    st.text('FROM:')
+                    st.write(st.session_state.text[i])
+                    st.text('TO:')
+                    st.write(st.session_state.style[i])
+                    st.text('TRANSLATION:')
+                    response_text = st.session_state.responses[i].replace('```', '')
+                    st.write(response_text)
+        else:
+            st.info("please select or enter a directive to translate to")
+    else:
+        st.info("please enter text to be translated") 
