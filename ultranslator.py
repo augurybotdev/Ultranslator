@@ -6,6 +6,7 @@ from io import BytesIO
 import os
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
+from st_custom_components import st_audiorec
 
 
 st.title("ULTRANSLATOR")
@@ -21,7 +22,19 @@ def get_completion(prompt, model="gpt-4-0613"):
     )
     return response.choices[0].message["content"]
 st.markdown("#### Text to Translate")
+
+audio_in = st.checkbox('transcribe audio', key='audio_in' )
+if audio_in:
+    wav_audio_data = st_audiorec()
+    # if wav_audio_data is not None:
+    # display audio data as received on the backend
+        # st.audio(wav_audio_data, format='audio/wav')
+    # create speech to text endpoint with wav audio data and google cloud speech to text api'
+        
+
 text = st.text_area("enter text to translate", label_visibility="collapsed")
+
+        
 
 if "saved_styles" not in st.session_state:
     st.session_state.saved_styles = []
@@ -29,7 +42,7 @@ if "saved_styles" not in st.session_state:
 # Display styles in a dropdown
 with st.sidebar:
     st.markdown("### Saved Styles")
-    selected_style = st.selectbox("", [''] + st.session_state.saved_styles)
+    selected_style = st.selectbox("your styles", [''] + st.session_state.saved_styles)
     
 st.markdown("#### Language or Style Directions")
 style = st.text_area("enter language or character or style to translate to", value=selected_style, label_visibility="collapsed")
