@@ -3,30 +3,12 @@ import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from st_custom_components import st_audiorec
-from google.cloud import speech
-from google.cloud import secretmanager
 import os
 from speechrecognition import transcribe_audio
-
 
 st.title("ULTRANSLATOR")
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
-
-# def access_secret_version(project_id, secret_id, version_id):
-#     client    = secretmanager.SecretManagerServiceClient()
-#     name      = client.secret_version_path(project_id, secret_id, version_id)
-#     response  = client.access_secret_version(request={"name":name})
-#     payload   = response.payload.data.decode('UTF-8')
-#     return payload
-
-# project_id = st.secrets['PROJECT_ID']
-# secret_id  = st.secrets['SECRET_ID']
-# version_id = st.secrets['VERSION_ID']
-
-# json_key_path = access_secret_version(project_id, secret_id, version_id)
-
-# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = json_key_path
 
 if "saved_styles" not in st.session_state:
     st.session_state.saved_styles   = []
@@ -38,20 +20,6 @@ if "responses" not in st.session_state:
     st.session_state.responses      = []
 if "recorded_audio" not in st.session_state:
     st.session_state.recorded_audio = False
-
-# def transcribe_audio(audio_data):
-#     client = speech.SpeechClient()
-#     audio  = speech.RecognitionAudio(content=audio_data)
-#     config = speech.RecognitionConfig(
-        
-#         encoding          = speech.RecognitionConfig.AudioEncoding.LINEAR16,
-#         sample_rate_hertz = 16000,
-#         language_code     = "en-US",
-#     )
-
-#     response = client.recognize(config=config, audio=audio)
-#     for result in response.results:
-#         return result.alternatives[0].transcript
 
 def get_completion(prompt, model="gpt-4-0613"):
     messages = [{"role": "user", "content": prompt}]
