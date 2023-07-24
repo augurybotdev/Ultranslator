@@ -1,3 +1,5 @@
 secrets.toml
 all_requirements.txt
+pip3requirements.txt
 audio_chunks
+ultenv
