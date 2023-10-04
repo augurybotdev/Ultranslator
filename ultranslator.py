@@ -94,7 +94,15 @@ with st.expander("Instructions"):
     
 #... your existing code ...
 
-if st.button('Show Example'):
+text = st.text_area("enter text to translate", value = st.session_state.text, label_visibility="collapsed")
+
+# Display styles in a dropdown
+with st.sidebar:
+    st.markdown("### Saved Styles")
+    selected_style = st.selectbox("your styles", [''] + st.session_state.saved_styles)
+
+example_button = st.button('Show Example')
+if example_button:
     st.markdown(
         """
         ### Example:
@@ -121,15 +129,9 @@ if st.button('Show Example'):
         "Jules: What do they call it?\n"
         "Vincent: They call it a “Royale with Cheese”.\n"
     )
-    st.session_state.style.append("15th century English Peasant")
+    # st.session_state.style.append("15th century English Peasant")
+    selected_style = "Overly excited 15th century English Peasant"
 
-
-text = st.text_area("enter text to translate", label_visibility="collapsed")
-
-# Display styles in a dropdown
-with st.sidebar:
-    st.markdown("### Saved Styles")
-    selected_style = st.selectbox("your styles", [''] + st.session_state.saved_styles)
     
 st.markdown("#### Language or Style Directions")
 style = st.text_area("enter language or character or style to translate to", value=selected_style, label_visibility="collapsed")
