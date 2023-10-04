@@ -80,7 +80,7 @@ example_button = st.button('Show Example')
 
 if example_button:
     
-    text = st.text_area("enter text to translate", value = st.session_state.text, label_visibility="collapsed")
+    text = st.text_area("enter text to translate", value = movie_scene, label_visibility="collapsed")
     style = st.text_area("enter language or character or style to translate to", value=st.session_state.example_style, label_visibility="collapsed")
 else:
     text = st.text_area("enter text to translate", label_visibility="collapsed")
