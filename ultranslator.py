@@ -94,12 +94,12 @@ with example_options:
         style_examples = ["Yoda", "French", "Cockney", "Cajun", "1920's Gangster", "Beldar Conehead", "Liam Neeson in the movie 'Taken'", "A smooth cat that's hip and groovy", "Overly Proper and Polite", "Baby Talk", "Chatbot", "Trump", "alliteration-sounding Mandarin-poem",  "15th Century English Nobleman", "Snoop Dogg", "Annoyingly Verbose 90's rapper"]
         selected_text = st.selectbox("text examples", text_input_examples)
         selected_style = st.selectbox("style examples", style_examples)
-        text = selected_text
+        example_text = selected_text
         example_style = selected_style
 
 
 if example_button:
-    st.session_state.text = movie_scene
+    st.session_state.text = example_text
     st.session_state.style = example_style
 
 text = st.text_area("enter text to translate", value=st.session_state.text, label_visibility="collapsed")
