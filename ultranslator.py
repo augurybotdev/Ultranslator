@@ -30,35 +30,35 @@ def get_completion(prompt, model="gpt-4-0613"):
     )
     return response.choices[0].message["content"]
 
-st.markdown("#### Text to Translate")
+# st.markdown("#### Text to Translate")
 
-audio_in = st.checkbox('transcribe audio', key='audio_in' )
+# audio_in = st.checkbox('transcribe audio', key='audio_in' )
 
-if audio_in:
+# if audio_in:
     
-    wav_audio_data = st_audiorec()
+#     wav_audio_data = st_audiorec()
     
-    if wav_audio_data is not None:
-        filename = "recorded_speech.wav"
+#     if wav_audio_data is not None:
+#         filename = "recorded_speech.wav"
         
-        if os.path.exists(filename):
-            os.remove(filename)
+#         if os.path.exists(filename):
+#             os.remove(filename)
             
-        with open(filename, 'wb') as f:
-            f.write(wav_audio_data)
+#         with open(filename, 'wb') as f:
+#             f.write(wav_audio_data)
             
-        print(f"Filename: {filename}")  # Print the filename
-        print(f"File exists: {os.path.exists(filename)}")  # Check if the file exists
+#         print(f"Filename: {filename}")  # Print the filename
+#         print(f"File exists: {os.path.exists(filename)}")  # Check if the file exists
         
-        text = transcribe_audio(filename)
+#         text = transcribe_audio(filename)
         
-        st.session_state.text.append(text)
-        st.session_state.recorded_audio = True
+#         st.session_state.text.append(text)
+#         st.session_state.recorded_audio = True
 
-if st.session_state.recorded_audio == True:
-    value = st.session_state.text[0]
-else:
-    value =''
+# if st.session_state.recorded_audio == True:
+#     value = st.session_state.text[0]
+# else:
+#     value =''
             
 text = st.text_area("enter text to translate", value=value, label_visibility="collapsed")
 
