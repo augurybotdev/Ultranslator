@@ -70,7 +70,7 @@ with st.expander("Instructions"):
 
         ## About ULTRANSLATOR:
 
-        ULTRANSLATOR is a sophisticated tool designed to translate text input into a specified language, style, or character directive. Utilizing the prowess of OpenAI's GPT-4, it smartly adapts the text to mirror the nuances of the chosen directive. Whether it's translating modern text into Shakespearean prose or a casual chat into formal language, ULTRANSLATOR stands ready to assist.
+        ULTRANSLATOR is a fun tool designed to translate text input into a specified language, style, or character directive. Utilizing the prowess of OpenAI's GPT-4, it smartly adapts the text to mirror the nuances of the chosen directive. Whether it's translating modern text into Shakespearean prose or a casual chat into formal language, ULTRANSLATOR stands ready to assist.
 
         ---
 
@@ -91,6 +91,38 @@ with st.expander("Instructions"):
             - If you find a particular style useful, the application will save it for easier selection in future sessions.
         """
     )
+    
+#... your existing code ...
+
+if st.button('Show Example'):
+    st.markdown(
+        """
+        ### Example:
+        
+        Let's take a snippet of dialogue from the movie Pulp Fiction, where Vincent (John Travolta) is sharing his experiences in Paris with Jules (Samuel L. Jackson):
+
+        ```
+        Vincent: You know what they call a Quarter Pounder with Cheese in Paris?
+        Jules: They don’t call it a Quarter Pounder with Cheese?
+        Vincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.
+        Jules: What do they call it?
+        Vincent: They call it a “Royale with Cheese”.
+        ```
+
+        Now, let's translate this dialogue to the vernacular of a 15th century English Peasant. Enter the text and select or enter "15th century English Peasant" in the directive input box, then hit the "Translate" button to see the stylized result.
+        """
+    )
+    
+    # Prefill the text and directive for the user
+    st.session_state.text.append(
+        "Vincent: You know what they call a Quarter Pounder with Cheese in Paris?\n"
+        "Jules: They don’t call it a Quarter Pounder with Cheese?\n"
+        "Vincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.\n"
+        "Jules: What do they call it?\n"
+        "Vincent: They call it a “Royale with Cheese”.\n"
+    )
+    st.session_state.style.append("15th century English Peasant")
+
 
 text = st.text_area("enter text to translate", label_visibility="collapsed")
 
