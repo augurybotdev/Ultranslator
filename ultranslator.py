@@ -2,9 +2,7 @@ import openai
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
-from st_custom_components import st_audiorec
 import os
-from speechrecognition import transcribe_audio
 
 st.title("ULTRANSLATOR")
 
@@ -32,7 +30,7 @@ def get_completion(prompt, model="gpt-4-0613"):
 
 if "text" not in st.session_state:
     st.session_state.text = []
-movie_scene = "Vincent: You know what they call a Quarter Pounder with Cheese in Paris?\nJules: They don’t call it a Quarter Pounder with Cheese?\nVincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.\nJules: What do they call it?\nVincent: They call it a “Royale with Cheese."
+movie_scene = """Vincent: You know what they call a Quarter Pounder with Cheese in Paris?\nJules: They don’t call it a Quarter Pounder with Cheese?\nVincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.\nJules: What do they call it?\nVincent: They call it a “Royale with Cheese."""
 
 with st.expander("Instructions"):
     st.markdown(
