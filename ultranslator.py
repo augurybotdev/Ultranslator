@@ -27,15 +27,17 @@ def get_completion(prompt, model="gpt-4-0613"):
         temperature=0, 
     )
     return response.choices[0].message["content"]
-
-if "text" not in st.session_state:
-    st.session_state.text = ""
-movie_scene = """
-    Vincent: You know what they call a Quarter Pounder with Cheese in Paris?
+    
+movie_scene = """Vincent: You know what they call a Quarter Pounder with Cheese in Paris?
     Jules: They don’t call it a Quarter Pounder with Cheese?
     Vincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.
     Jules: What do they call it?
     Vincent: They call it a “Royale with Cheese."""
+    
+if "text" not in st.session_state:
+    st.session_state.text = movie_scene
+if "example_style" not in st.session_state:
+    st.session_state.example_style = "Overly excited 15th century English Peasant"
 
 with st.expander("Instructions"):
     st.markdown(
@@ -75,14 +77,16 @@ with st.sidebar:
     selected_style = st.selectbox("your styles", [''] + st.session_state.saved_styles)
 
 example_button = st.button('Show Example')
-if example_button:
-    st.session_state.text = movie_scene
-    selected_style = "Overly excited 15th century English Peasant"
 
-text = st.text_area("enter text to translate", value = st.session_state.text, label_visibility="collapsed")
+if example_button:
+    
+    text = st.text_area("enter text to translate", value = st.session_state.text, label_visibility="collapsed")
+    style = st.text_area("enter language or character or style to translate to", value=st.session_state.example_style, label_visibility="collapsed")
+else:
+    text = st.text_area("enter text to translate", label_visibility="collapsed")
+    style = st.text_area("enter language or character or style to translate to", value=selected_style, label_visibility="collapsed")
     
 st.markdown("#### Language or Style Directions")
-style = st.text_area("enter language or character or style to translate to", value=selected_style, label_visibility="collapsed")
 
 if style and style not in st.session_state.saved_styles:
     st.session_state.saved_styles.append(style)
