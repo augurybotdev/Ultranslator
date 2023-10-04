@@ -3,41 +3,44 @@ import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 import os
+import time
 
 st.title("ULTRANSLATOR")
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 if "saved_styles" not in st.session_state:
-    st.session_state.saved_styles   = []
+    st.session_state.saved_styles = []
 if "text" not in st.session_state:
-    st.session_state.text           = []
+    st.session_state.text = ""
 if "style" not in st.session_state:
-    st.session_state.style          = []
+    st.session_state.style = ""
 if "responses" not in st.session_state:
-    st.session_state.responses      = []
-if "recorded_audio" not in st.session_state:
-    st.session_state.recorded_audio = False
+    st.session_state.responses = []
 
 def get_completion(prompt, model="gpt-4-0613"):
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
         model=model,
         messages=messages,
-        temperature=0, 
+        temperature=0,
     )
     return response.choices[0].message["content"]
-    
-movie_scene = """Vincent: You know what they call a Quarter Pounder with Cheese in Paris?
-    Jules: They don’t call it a Quarter Pounder with Cheese?
-    Vincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.
-    Jules: What do they call it?
-    Vincent: They call it a “Royale with Cheese."""
-    
-if "text" not in st.session_state:
-    st.session_state.text = []
-if "example_style" not in st.session_state:
-    st.session_state.example_style = "Overly excited 15th century English Peasant"
+
+fiction = """Vincent: You know what they call a Quarter Pounder with Cheese in Paris?
+Jules: They don’t call it a Quarter Pounder with Cheese?
+Vincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.
+Jules: What do they call it?
+Vincent: They call it a “Royale with Cheese."""
+
+history = """Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal. Now we are engaged in a great civil war, testing whether that nation, or any nation so conceived and so dedicated, can long endure"""
+
+roosevelt = """It is not the critic who counts; not the man who points out how the strong man stumbles, or where the doer of deeds could have done them better. The credit belongs to the man who is actually in the arena, whose face is marred by dust and sweat and blood; who strives valiantly; who errs, who comes short again and again, because there is no effort without error and shortcoming.."""""
+
+breakfast = """Grid-like breakfast slabs... seared strips of swine flesh and flattened chicken embryos. I will enjoy it."""
+
+madison = """Mr.Madison, what you’ve just said is one of the most insanely idiotic things I have ever heard. At no point in your rambling, incoherent response were you even close to anything that could be considered a rational thought. Everyone in this room is now dumber for having listened to it. I award you no points, and may God have mercy on your soul."""
+
 
 with st.expander("Instructions"):
     st.markdown(
@@ -74,23 +77,35 @@ with st.expander("Instructions"):
 # Display styles in a dropdown
 with st.sidebar:
     st.markdown("### Saved Styles")
-    selected_style = st.selectbox("your styles", [''] + st.session_state.saved_styles)
+    style_selection_placeholder = st.empty()
 
-example_button = st.button('Show Example')
+example_options = st.container()
+
+    
+example_button = st.button('Place Example')
+example_style = st.session_state.style
+
+with example_options:
+    toggle = st.toggle("use preset ideas")
+    
+    if toggle:
+        example_options.expander("example ideas")
+        text_input_examples = [fiction, history, roosevelt, breakfast, madison]
+        style_examples = ["Yoda", "French", "Cockney", "Cajun", "1920's Gangster", "Beldar Conehead", "Liam Neeson in the movie 'Taken'", "A smooth cat that's hip and groovy", "Overly Proper and Polite", "Baby Talk", "Chatbot", "Trump", "alliteration-sounding Mandarin-poem",  "15th Century English Nobleman", "Snoop Dogg", "Annoyingly Verbose 90's rapper"]
+        selected_text = st.selectbox("text examples", text_input_examples)
+        selected_style = st.selectbox("style examples", style_examples)
+        text = selected_text
+        example_style = selected_style
+
 
 if example_button:
-    
-    text = st.text_area("enter text to translate", value = movie_scene, label_visibility="collapsed")
-    style = st.text_area("enter language or character or style to translate to", value=st.session_state.example_style, label_visibility="collapsed")
-else:
-    text = st.text_area("enter text to translate", label_visibility="collapsed")
-    style = st.text_area("enter language or character or style to translate to", value=selected_style, label_visibility="collapsed")
+    st.session_state.text = movie_scene
+    st.session_state.style = example_style
 
-st.session_state.text.append(text)
+text = st.text_area("enter text to translate", value=st.session_state.text, label_visibility="collapsed")
+style = st.text_area("enter language or character or style to translate to", value=st.session_state.style, label_visibility="collapsed")
+
 st.markdown("#### Language or Style Directions")
-
-if style and style not in st.session_state.saved_styles:
-    st.session_state.saved_styles.append(style)
     
 col1, col2, col3 = st.columns([3,3,1])
 
@@ -111,31 +126,23 @@ text: ```{text}```
 chat = ChatOpenAI(temperature=0.0)
 prompt_template = ChatPromptTemplate.from_template(template_string)
 
-formatted_text = prompt_template.format_messages(
-    style=style,
-    text=text
-)
-
 if translate_button:
-    if text:
-        if style:     
-            st.session_state.text.append(text)
-            st.session_state.style.append(style)
+    with st.spinner('Translating...'):
+        if style and style not in st.session_state.saved_styles:
+            st.session_state.saved_styles.append(style)
+        formatted_text = prompt_template.format_messages(style=style,text=text)
+        translated_response = chat(formatted_text)
+        response = translated_response.content
+        st.session_state.responses.append(response)
 
-            translated_response = chat(formatted_text)
-            response            = translated_response.content
-            st.session_state.responses.append(response)
-
-            for i in range(len(st.session_state.responses)):
-                with st.expander(f'{st.session_state.style[i]}', expanded=False):
-                    st.text('FROM:')
-                    st.write(st.session_state.text[i])
-                    st.text('TO:')
-                    st.write(st.session_state.style[i])
-                    st.text('TRANSLATION:')
-                    response_text = st.session_state.responses[i].replace('```', '')
-                    st.write(response_text)
-        else:
-            st.info("please select or enter a directive to translate to")
-    else:
-        st.info("please enter text to be translated") 
+        for i in range(len(st.session_state.responses)):
+            with st.expander(f'{st.session_state.style}', expanded=False):  # changed this line
+                st.text('FROM:')
+                st.write(st.session_state.text)
+                st.text('TO:')
+                st.write(st.session_state.style)  # changed this line
+                st.text('TRANSLATION:')
+                response_text = st.session_state.responses[i].replace('```', '')
+                st.write(response_text)
+                
+style_selection_placeholder.selectbox("your styles", [''] + st.session_state.saved_styles)
