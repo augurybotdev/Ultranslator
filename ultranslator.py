@@ -35,7 +35,7 @@ movie_scene = """Vincent: You know what they call a Quarter Pounder with Cheese 
     Vincent: They call it a “Royale with Cheese."""
     
 if "text" not in st.session_state:
-    st.session_state.text = movie_scene
+    st.session_state.text = []
 if "example_style" not in st.session_state:
     st.session_state.example_style = "Overly excited 15th century English Peasant"
 
@@ -85,7 +85,8 @@ if example_button:
 else:
     text = st.text_area("enter text to translate", label_visibility="collapsed")
     style = st.text_area("enter language or character or style to translate to", value=selected_style, label_visibility="collapsed")
-    
+
+st.session_state.text.append(text)
 st.markdown("#### Language or Style Directions")
 
 if style and style not in st.session_state.saved_styles:
