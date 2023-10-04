@@ -134,15 +134,12 @@ if translate_button:
         translated_response = chat(formatted_text)
         response = translated_response.content
         st.session_state.responses.append(response)
-
-        for i in range(len(st.session_state.responses)):
-            with st.expander(f'{st.session_state.style}', expanded=False):  # changed this line
-                st.text('FROM:')
-                st.write(st.session_state.text)
-                st.text('TO:')
-                st.write(st.session_state.style)  # changed this line
-                st.text('TRANSLATION:')
+        current_response = response.replace('```', '')
+        st.write(current_response)
+                
+        history = st.expander("response history")
+        with history:
+            for i in range(len(st.session_state.responses)):
                 response_text = st.session_state.responses[i].replace('```', '')
                 st.write(response_text)
-                
 style_selection_placeholder.selectbox("your styles", [''] + st.session_state.saved_styles)
