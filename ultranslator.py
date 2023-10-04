@@ -30,37 +30,16 @@ def get_completion(prompt, model="gpt-4-0613"):
     )
     return response.choices[0].message["content"]
 
-# st.markdown("#### Text to Translate")
+if "text" not in st.session_state:
+    st.session_state.text = []
+st.session_state.text = """
+        "Vincent: You know what they call a Quarter Pounder with Cheese in Paris?"
+        "Jules: They don’t call it a Quarter Pounder with Cheese?"
+        "Vincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is."
+        "Jules: What do they call it?"
+        "Vincent: They call it a “Royale with Cheese."
+"""
 
-# audio_in = st.checkbox('transcribe audio', key='audio_in' )
-
-# if audio_in:
-    
-#     wav_audio_data = st_audiorec()
-    
-#     if wav_audio_data is not None:
-#         filename = "recorded_speech.wav"
-        
-#         if os.path.exists(filename):
-#             os.remove(filename)
-            
-#         with open(filename, 'wb') as f:
-#             f.write(wav_audio_data)
-            
-#         print(f"Filename: {filename}")  # Print the filename
-#         print(f"File exists: {os.path.exists(filename)}")  # Check if the file exists
-        
-#         text = transcribe_audio(filename)
-        
-#         st.session_state.text.append(text)
-#         st.session_state.recorded_audio = True
-
-# if st.session_state.recorded_audio == True:
-#     value = st.session_state.text[0]
-# else:
-#     value =''
-            
-# text = st.text_area("enter text to translate", value=value, label_visibility="collapsed")
 with st.expander("Instructions"):
     st.markdown(
         """
@@ -91,10 +70,7 @@ with st.expander("Instructions"):
             - If you find a particular style useful, the application will save it for easier selection in future sessions.
         """
     )
-    
-#... your existing code ...
 
-text = st.text_area("enter text to translate", value = st.session_state.text, label_visibility="collapsed")
 
 # Display styles in a dropdown
 with st.sidebar:
@@ -122,16 +98,10 @@ if example_button:
     )
     
     # Prefill the text and directive for the user
-    st.session_state.text.append(
-        "Vincent: You know what they call a Quarter Pounder with Cheese in Paris?\n"
-        "Jules: They don’t call it a Quarter Pounder with Cheese?\n"
-        "Vincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.\n"
-        "Jules: What do they call it?\n"
-        "Vincent: They call it a “Royale with Cheese”.\n"
-    )
     # st.session_state.style.append("15th century English Peasant")
     selected_style = "Overly excited 15th century English Peasant"
 
+text = st.text_area("enter text to translate", value = st.session_state.text, label_visibility="collapsed")
     
 st.markdown("#### Language or Style Directions")
 style = st.text_area("enter language or character or style to translate to", value=selected_style, label_visibility="collapsed")
