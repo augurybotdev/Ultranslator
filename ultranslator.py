@@ -61,6 +61,36 @@ def get_completion(prompt, model="gpt-4-0613"):
 #     value =''
             
 # text = st.text_area("enter text to translate", value=value, label_visibility="collapsed")
+with st.expander("Instructions"):
+    st.markdown(
+        """
+        Title: Instructional Guide and About Message for ULTRANSLATOR
+
+        ---
+
+        ## About ULTRANSLATOR:
+
+        ULTRANSLATOR is a sophisticated tool designed to translate text input into a specified language, style, or character directive. Utilizing the prowess of OpenAI's GPT-4, it smartly adapts the text to mirror the nuances of the chosen directive. Whether it's translating modern text into Shakespearean prose or a casual chat into formal language, ULTRANSLATOR stands ready to assist.
+
+        ---
+
+        ## How to Use:
+
+        1. **Enter Text:**
+            - Locate the text input box titled "enter text to translate".
+            - You can type in or paste the text you wish to translate here.
+
+        2. **Specify Directive:**
+            - In the sidebar, you'll find a section titled "Saved Styles" where you can select a previously used style or enter a new one in the text area below titled "enter language or character or style to translate to".
+
+        3. **Translation:**
+            - Click on the "Translate" button.
+            - The translated text will appear below, formatted according to the specified directive. You can view the original text, directive, and the translated text all in one place for easy comparison.
+
+        4. **Save Styles (Optional):**
+            - If you find a particular style useful, the application will save it for easier selection in future sessions.
+        """
+    )
 
 text = st.text_area("enter text to translate", label_visibility="collapsed")
 
