@@ -60,7 +60,9 @@ def get_completion(prompt, model="gpt-4-0613"):
 # else:
 #     value =''
             
-text = st.text_area("enter text to translate", value=value, label_visibility="collapsed")
+# text = st.text_area("enter text to translate", value=value, label_visibility="collapsed")
+
+text = st.text_area("enter text to translate", label_visibility="collapsed")
 
 # Display styles in a dropdown
 with st.sidebar:
