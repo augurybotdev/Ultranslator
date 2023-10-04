@@ -29,8 +29,13 @@ def get_completion(prompt, model="gpt-4-0613"):
     return response.choices[0].message["content"]
 
 if "text" not in st.session_state:
-    st.session_state.text = []
-movie_scene = """Vincent: You know what they call a Quarter Pounder with Cheese in Paris?\nJules: They don’t call it a Quarter Pounder with Cheese?\nVincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.\nJules: What do they call it?\nVincent: They call it a “Royale with Cheese."""
+    st.session_state.text = ""
+movie_scene = """
+    Vincent: You know what they call a Quarter Pounder with Cheese in Paris?
+    Jules: They don’t call it a Quarter Pounder with Cheese?
+    Vincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.
+    Jules: What do they call it?
+    Vincent: They call it a “Royale with Cheese."""
 
 with st.expander("Instructions"):
     st.markdown(
@@ -71,7 +76,7 @@ with st.sidebar:
 
 example_button = st.button('Show Example')
 if example_button:
-    st.session_state.text.append(movie_scene)
+    st.session_state.text = movie_scene
     selected_style = "Overly excited 15th century English Peasant"
 
 text = st.text_area("enter text to translate", value = st.session_state.text, label_visibility="collapsed")
