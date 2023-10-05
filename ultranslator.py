@@ -51,7 +51,7 @@ with st.expander("Instructions"):
 
         ## About ULTRANSLATOR:
 
-        ULTRANSLATOR is a fun tool designed to translate text input into a specified language, style, or character directive. Utilizing the prowess of OpenAI's GPT-4, it smartly adapts the text to mirror the nuances of the chosen directive. Whether it's translating modern text into Shakespearean prose or a casual chat into formal language, ULTRANSLATOR stands ready to assist.
+        ULTRANSLATOR is a fun tool designed to translate text input into a specified language, style, or character directive.
 
         ---
 
