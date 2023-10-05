@@ -91,7 +91,7 @@ with example_options:
     if toggle:
         example_options.expander("example ideas")
         text_input_examples = [fiction, history, roosevelt, breakfast, madison]
-        style_examples = ["Yoda", "French", "Cockney", "Cajun", "1920's Gangster", "Beldar Conehead", "Liam Neeson in the movie 'Taken'", "A smooth cat that's hip and groovy", "Overly Proper and Polite", "Baby Talk", "Chatbot", "Trump", "alliteration-sounding Mandarin-poem",  "15th Century English Nobleman", "Snoop Dogg", "Annoyingly Verbose 90's rapper"]
+        style_examples = ["Yoda", "French", "Cockney", "Cajun", "1920's Gangster", "Beldar Conehead", "Liam Neeson", "Groovy Cat, 1970, Hip To It", "Overly Apologetic, Stammering and Polite", "Baby Talk", "Stoney from Encinoman", "Exaggerate Everything", "alliteration-sounding Mandarin-poem",  "15th Century English Nobleman", "90's rapper", "Pig Latin"]
         selected_text = st.selectbox("text examples", text_input_examples)
         selected_style = st.selectbox("style examples", style_examples)
         example_text = selected_text
@@ -120,6 +120,9 @@ into a style or language that is {style}. \
 When appropriate, alter the nouns and verbs to fit the context of the desired style \
 For example, if the style is from 1600's and the text contains a reference to an automobile, \
 translate that reference to "horse and carriage". \
+    
+Remember to stay in character! Don't start applying old english accents if it isn't appropriate for the given style.
+ 
 text: ```{text}```
 """
 
