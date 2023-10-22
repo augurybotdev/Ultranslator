@@ -28,8 +28,8 @@ def get_completion(prompt, model="gpt-4-0613"):
     return response.choices[0].message["content"]
 
 fiction = """Vincent: You know what they call a Quarter Pounder with Cheese in Paris?
-Jules: They don’t call it a Quarter Pounder with Cheese?
-Vincent: No, they got the metric system there, they wouldn’t know what the heck a Quarter Pounder is.
+Jules: They don't call it a Quarter Pounder with Cheese?
+Vincent: No, they got the metric system there, they wouldn't know what the heck a Quarter Pounder is.
 Jules: What do they call it?
 Vincent: They call it a “Royale with Cheese."""
 
@@ -39,7 +39,7 @@ roosevelt = """It is not the critic who counts; not the man who points out how t
 
 breakfast = """Grid-like breakfast slabs... seared strips of swine flesh and flattened chicken embryos. I will enjoy it."""
 
-madison = """Mr.Madison, what you’ve just said is one of the most insanely idiotic things I have ever heard. At no point in your rambling, incoherent response were you even close to anything that could be considered a rational thought. Everyone in this room is now dumber for having listened to it. I award you no points, and may God have mercy on your soul."""
+madison = """Mr.Madison, what you've just said is one of the most insanely idiotic things I have ever heard. At no point in your rambling, incoherent response were you even close to anything that could be considered a rational thought. Everyone in this room is now dumber for having listened to it. I award you no points, and may God have mercy on your soul."""
 
 
 with st.expander("Instructions"):
@@ -51,7 +51,22 @@ with st.expander("Instructions"):
 
         ## About ULTRANSLATOR:
 
-        ULTRANSLATOR is a fun tool designed to translate text input into a specified language, style, or character directive.
+        I've crafted an app, a tool to relate,
+        That translates any tone, from any style to any given trait.
+        You can reach across eras, lands, cultures and countries and states
+        Even across realities piercing both time dimensions and space
+        To communicate with any person, that's ever been or would be a person belonged to the human race
+
+        Have you ever felt lost, misunderstood, with your words falling flat on your face?
+        Or even worse, your tongue and cheek chats, perceived in bad taste?
+        My app's your savior then friend , it clarifies your true phrase,
+        Ensuring your wit, and rightful respect in places completely foreign, you'll soon be embraced
+        As your gab and your chatter are heeded as candor and grace
+
+        So when humor fades and expressions go cold,
+        This tool finds the words, turns your stories to gold.
+        It's not just the content, but the tone that's key,
+        With this app, you'll connect, just try it you'll see.
 
         ---
 
@@ -91,7 +106,7 @@ with example_options:
     if toggle:
         example_options.expander("example ideas")
         text_input_examples = [fiction, history, roosevelt, breakfast, madison]
-        style_examples = ["Yoda", "French", "Cockney", "Cajun", "1920's Gangster", "Beldar Conehead", "Liam Neeson", "Groovy Cat, 1970, Hip To It", "Overly Apologetic, Stammering and Polite", "Baby Talk", "Stoney from Encinoman", "Exaggerate Everything", "alliteration-sounding Mandarin-poem",  "15th Century English Nobleman", "90's rapper", "Pig Latin"]
+        style_examples = ["Yoda", "French", "Cockney", "Cajun", "Italian", "Baby Talk", "Beldar Conehead", "Hawaiian Pidgin", "90's 'Fly' sounding White Boy", "Overly Apologetic", "Pauley Shore from Encinoman", "Obama", "Alliterative Mandarin Poetry",  "15th Century English Nobleman", "Pig Latin"]
         selected_text = st.selectbox("text examples", text_input_examples)
         selected_style = st.selectbox("style examples", style_examples)
         example_text = selected_text
@@ -114,16 +129,66 @@ with col3:
     
 st.divider()
 
-template_string = """Translate the text \
-that is delimited by triple backticks \
-into a style or language that is {style}. \
-When appropriate, alter the nouns and verbs to fit the context of the desired style \
-For example, if the style is from 1600's and the text contains a reference to an automobile, \
-translate that reference to "horse and carriage". \
-    
-Remember to stay in character! Don't start applying old english accents if it isn't appropriate for the given style.
- 
-text: ```{text}```
+template_string = """\
+**TASK**
+
+1. Translate the original text so that is matches the, language, cultural slang, accent lingo, jargon, lexicon, vernacular, dialect, tone, vibe and lexicon of the given style and or character.
+Take creative liberty to re-interpret and re-phrase the provided text so that it most convincingly fits within all aspects.
+When translating, place yourself in both time and space as well as character and mood to capture realistically how the given text could be expressed as faithfully as possible.
+For example, if a character is from another time, prior to when certain technologies did not yet exist, take this into account. 
+Or if a character is from a known fictional universe, or has a particular accent or pattern in their speech, take this into account as well.
+Lastly, attempt to communicate regional dialects, slangs, vernaculars and turns of phrase to communicate across regions, cultures and ideas.
+
+Here are some *examples* of some original texts and their translations:
+
+[BEGIN EXAMPLES]
+
+Original: "She's very smart and does well in school."
+British (Cockney): "She's proper clever, does top in school."
+
+Original: "Did I like the food? I sure did!"
+New Yorker: "Facts, the food was lit fam."
+
+Original: "My car's GPS took me the wrong way!"
+15th Century Nobleman: "Mine carriage's compass led me astray!"
+
+Original: "I'm heading to the beach this afternoon. Want to join me? It's a beautiful day!"
+Hawaiian Pidgin:
+"Eh, I going beach side dis aftahnoon, brah. You like come? Da day stay lookin' cherry!"
+
+Original: "We'll need more chips for the party tonight."
+Beldar Conehead: "We require additional fried consumables for this evening's communal gathering."
+
+Original: "You did a great job."
+Yoda: "A great job, you did."
+
+Original: "This is a really impressive building."
+Trump-esque: "This building, it's truly tremendous. Everyone knows it's probably the best in maybe the whole world. Everyone says so."
+
+Original: "Education is the key to a better future."
+Obama-esque: "If you look at the arc of history, education stands out as the gateway to a brighter tomorrow."
+
+Original: "This car is quite old and might break down, but it's still reliable most of the time."
+Australian (Extreme):
+"Oi, this ute's a bit of a clunker and might chuck a wobbly, but she's right as rain most days, mate!"
+
+Original: "Hey man! We should chill at my place! My mom's gonna be gone all weekend!"
+90's White Boy Gangsta: "Yo peep this dawg! Le casa is officially O.P.P. vacant! ya feel me? Word to my mother! know what I'm saying boyyyy??"
+
+Original: "Hello there! How have you been? We should get together for a coffee and chat soon."
+Cajun:
+"Hey cher! Comment ça va? We oughta meet up for some café au lait and pass a good time, yeah."
+
+[END EXAMPLES]
+
+!! IMPORTANT. DO NOT APPLY OLD ENGLISH STYLE INAPPROPRIATELY. for example: do NOT apply old english style to style of 'Beldar Conehead'! He doesn't speak in old english style. !!
+
+Here is the original text you need to translate:
+```{text}```
+
+And here is the style or character you need to translate it to:
+
+```{style}```
 """
 
 chat = ChatOpenAI(temperature=0.0)
