@@ -2,10 +2,11 @@ import openai
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
+from streamlit_extras.stylable_container import stylable_container 
 import os
 import time
 
-st.title("ULTRANSLATOR")
+st.markdown("# :violet[ULTRANSLATOR]")
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
@@ -17,8 +18,43 @@ if "style" not in st.session_state:
     st.session_state.style = ""
 if "responses" not in st.session_state:
     st.session_state.responses = []
+    
+def special_button(button_text):
+    with stylable_container(key="translate_button", 
+                            css_styles="""
+                                button { 
+                                    background-color: #2986cc; 
+                                    color: white; 
+                                    border-radius: 10px;
+                                    }
+                                font-weight: bold;"""):
+        st.button(button_text, key = "a_button")
+    
+def container_with_border(current_response):
+    with stylable_container(
+        key="container_with_border",
+        css_styles="""
+            {
+                border: 3px solid rgba(149, 151, 163, 0.2);
+                border-radius: 0.5rem;
+                background-color: rgba(245, 245, 245, 0.7);
+            }
+            p {   
+                padding-top: 0em;
+                padding-bottom: 1em;
+                padding-left: 1.5em;
+                padding-right: 1.5em;
+                word-wrap: break-word;
+                word-break: break-all;
+                white-space: pre-line:
+                overflow-wrap: break-word;
+            }
+            """,
+    ):
+        st.markdown(current_response)
 
-def get_completion(prompt, model="gpt-4-0613"):
+
+def get_completion(prompt, model="gpt-4"):
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(
         model=model,
@@ -41,16 +77,14 @@ breakfast = """Grid-like breakfast slabs... seared strips of swine flesh and fla
 
 madison = """Mr.Madison, what you've just said is one of the most insanely idiotic things I have ever heard. At no point in your rambling, incoherent response were you even close to anything that could be considered a rational thought. Everyone in this room is now dumber for having listened to it. I award you no points, and may God have mercy on your soul."""
 
+about_sample="""\
+    To capture the essence of ULTRANSLATOR, think of it as your ultimate communication tool. 
+    It translates not just words, but also tone and style, bridging gaps across time, space, and culture. 
+    Ever felt misunderstood or had your humor fall flat? This app ensures your message hits the mark, gaining you respect and understanding wherever you go. 
+    It's not just about what you say, but how you say it. 
+    Give it a try and see how it transforms your conversations into something golden."""
 
-with st.expander("Instructions"):
-    st.markdown(
-        """
-        Title: Instructional Guide and About Message for ULTRANSLATOR
-
-        ---
-
-        ## About ULTRANSLATOR:
-
+about_extended_with_alliteration="""\
         I've crafted an app, a tool to relate,
         That translates any tone, from any style to any given trait.
         You can reach across eras, lands, cultures and countries and states
@@ -67,10 +101,22 @@ with st.expander("Instructions"):
         This tool finds the words, turns your stories to gold.
         It's not just the content, but the tone that's key,
         With this app, you'll connect, just try it you'll see.
+        """
 
+
+with st.expander("Documentation"):
+    
+    title_with_header = st.markdown("""\
+        ### **About** Ultranslator:\
+        """)
+        
+    about_text = st.markdown(f"{about_sample}")
+    
+    how_to_use_text = st.markdown("""
+                
         ---
 
-        ## How to Use:
+        ### How to Use:
 
         1. **Enter Text:**
             - Locate the text input box titled "enter text to translate".
@@ -85,13 +131,13 @@ with st.expander("Instructions"):
 
         4. **Save Styles (Optional):**
             - If you find a particular style useful, the application will save it for easier selection in future sessions.
-        """
-    )
+        "
+    """)
 
 
 # Display styles in a dropdown
 with st.sidebar:
-    st.markdown("### Saved Styles")
+    st.markdown("### Session History")
     style_selection_placeholder = st.empty()
 
 example_options = st.container()
@@ -101,12 +147,20 @@ example_button = st.button('Place Example')
 example_style = st.session_state.style
 
 with example_options:
-    toggle = st.toggle("use preset ideas")
+    toggle = st.toggle("use preset ideas", help="""\
+                       1. toggle the switch to use preset examples. 
+                       
+                       2. Select a quote along with a pre-set style, 
+                       
+                       3. click the 'Place Example' button to confirm choices. 
+                       
+                       4. Click 'Translate' to receive translation.\
+                       """)
     
     if toggle:
         example_options.expander("example ideas")
         text_input_examples = [fiction, history, roosevelt, breakfast, madison]
-        style_examples = ["Yoda", "French", "Cockney", "Cajun", "Italian", "Baby Talk", "Beldar Conehead", "Hawaiian Pidgin", "90's 'Fly' sounding White Boy", "Overly Apologetic", "Pauley Shore from Encinoman", "Obama", "Alliterative Mandarin Poetry",  "15th Century English Nobleman", "Pig Latin"]
+        style_examples = ["French", "Cockney", "Yoda", "Mario from Super Mario Bros", "Cajun", "Italian", "Bostonian", "Baby Talk", "Hawaiian Pidgin", "90's 'Fly' sounding White Boy", "Overly Apologetic", "Pauley Shore from Encinoman", "Obama", "Alliterative Mandarin Poetry",  "15th Century English Nobleman", "Pig Latin", "East Harlem native, 1985", "Southern Baptist Preacher", "Pirate"]
         selected_text = st.selectbox("text examples", text_input_examples)
         selected_style = st.selectbox("style examples", style_examples)
         example_text = selected_text
@@ -117,34 +171,27 @@ if example_button:
     st.session_state.text = example_text
     st.session_state.style = example_style
 
-text = st.text_area("enter text to translate", value=st.session_state.text, label_visibility="collapsed")
-style = st.text_area("enter language or character or style to translate to", value=st.session_state.style, label_visibility="collapsed")
+text = st.text_area("enter the text that you'd like the ai to translate in the space below", value=st.session_state.text, label_visibility="hidden", placeholder="enter some text")
+style = st.text_area("Here you can specify what you'd like to translate your text to such as another language, or a unique dialect, vernacular, accent or slang.", value=st.session_state.style, label_visibility="hidden", placeholder="enter a language accent character or something else here")
 
-st.markdown("#### Language or Style Directions")
     
 col1, col2, col3 = st.columns([3,3,1])
 
-with col3:
-    translate_button = st.button("Translate")
+with col1:
+    st.divider()
+    
+    # translate_button = special_button("TRANSLATE")
+    translate_button  = st.button('Translate')
     
 st.divider()
 
 template_string = """\
-**TASK**
+To capture the essence of a character or style in your translation, immerse yourself in their specific language, culture, and mannerisms. 
+Consider the time period and technology available to them, as well as their unique way of speaking. 
+For someone like Donald Trump, remember that he rarely admits fault and often distorts facts. Make sure your translation aligns with his typical way of communicating. 
+Also, try to incorporate regional dialects and slang to make the translation culturally nuanced and authentic.
 
-1. Translate the original text so that is matches the, language, cultural slang, accent lingo, jargon, lexicon, vernacular, dialect, tone, vibe and lexicon of the given style and or character.
-Take creative liberty to re-interpret and re-phrase the provided text so that it most convincingly fits within all aspects.
-When translating, place yourself in both time and space as well as character and mood to capture realistically how the given text could be expressed as faithfully as possible.
-For example, if a character is from another time, prior to when certain technologies did not yet exist, take this into account. 
-Or if a character is from a known fictional universe, or has a particular accent or pattern in their speech, take this into account as well.
-Lastly, attempt to communicate regional dialects, slangs, vernaculars and turns of phrase to communicate across regions, cultures and ideas.
-
-Here are some *examples* of some original texts and their translations:
-
-[BEGIN EXAMPLES]
-
-Original: "She's very smart and does well in school."
-British (Cockney): "She's proper clever, does top in school."
+Here are some examples for inspiration:
 
 Original: "Did I like the food? I sure did!"
 New Yorker: "Facts, the food was lit fam."
@@ -152,47 +199,35 @@ New Yorker: "Facts, the food was lit fam."
 Original: "My car's GPS took me the wrong way!"
 15th Century Nobleman: "Mine carriage's compass led me astray!"
 
-Original: "I'm heading to the beach this afternoon. Want to join me? It's a beautiful day!"
-Hawaiian Pidgin:
-"Eh, I going beach side dis aftahnoon, brah. You like come? Da day stay lookin' cherry!"
-
 Original: "We'll need more chips for the party tonight."
 Beldar Conehead: "We require additional fried consumables for this evening's communal gathering."
 
-Original: "You did a great job."
-Yoda: "A great job, you did."
-
-Original: "This is a really impressive building."
-Trump-esque: "This building, it's truly tremendous. Everyone knows it's probably the best in maybe the whole world. Everyone says so."
-
-Original: "Education is the key to a better future."
-Obama-esque: "If you look at the arc of history, education stands out as the gateway to a brighter tomorrow."
-
-Original: "This car is quite old and might break down, but it's still reliable most of the time."
-Australian (Extreme):
-"Oi, this ute's a bit of a clunker and might chuck a wobbly, but she's right as rain most days, mate!"
-
-Original: "Hey man! We should chill at my place! My mom's gonna be gone all weekend!"
-90's White Boy Gangsta: "Yo peep this dawg! Le casa is officially O.P.P. vacant! ya feel me? Word to my mother! know what I'm saying boyyyy??"
-
-Original: "Hello there! How have you been? We should get together for a coffee and chat soon."
-Cajun:
-"Hey cher! Comment ça va? We oughta meet up for some café au lait and pass a good time, yeah."
-
-[END EXAMPLES]
-
-!! IMPORTANT. DO NOT APPLY OLD ENGLISH STYLE INAPPROPRIATELY. for example: do NOT apply old english style to style of 'Beldar Conehead'! He doesn't speak in old english style. !!
+Original: "This building is very large and seems to be built out of a lot of cement and steel."
+Trump: "This building, it's truly tremendous isn't it folks? The fake news media won't show you how amazing, just incredible this building truly is but those who are here will tell you, it's much more incredible than it seems on tv. One of the best in the world, maybe of all time, best buildings ever made. A lot of people, very smart people say so, and tell me all the time, they say, "Sir, How did you make this building so incredible? It's the most amazing and incredible building I've ever seen!"
 
 Here is the original text you need to translate:
 ```{text}```
 
 And here is the style or character you need to translate it to:
-
 ```{style}```
 """
 
+# Original: "This car is quite old and might break down, but it's still reliable most of the time."
+# Australian (Queensland):"Oi, this ute's a bit of a clunker and might chuck a wobbly, but she's right as rain most days, mate!"
+
+# Original: "Wind energy can be harvested with turbines that spin from the force of wind."
+# Trump: "Wind energy is terrible, it's completely unreliable, I mean what happens if the wind stops blowing, what happens when we have a windless day, you ever hear of that, no wind, a day with no wind. I don't want that I want wind, I like wind, but if there's no wind then what, what happens then, it's terrible. You need oil for that, you know that right? You can't just make wind. Wind doesn't just come out of nowhere, it needs oil to make it. It's true. And the birds, all the dead birds they're dying by the millions from these things, gives them cancer. It's true, terrible, so sad all the dead birds and cancer from these things... that's what they are all saying, believe me."
+
+# Original: "I lied. I'm sorry."
+# Trump: "They lied. They're very, very bad people. They hate you and they want to destroy this beautiful country. It's awful and it's very sad. Some people don't know, they don't know that they are lying about me. But that's what they do in the swamp, it's all fake, that's why I call them the 'Fake' 'News' 'Media' because that's what they are folks. 'F A K E'. They lie and they lie and they try to blame it all on me. And it's very sad, because some people, some people used to be smart but now they don't know about the lies and it's tearing us apart, because they hate us because we love America. They say it's my fault and I'm sorry they lied about me to you. They're liars, they can't even help themselves anymore I guess. And so, I'm sorry, but I'm not sorry. They're sorry. I'm not sorry."
+
+
+
 chat = ChatOpenAI(temperature=0.0)
 prompt_template = ChatPromptTemplate.from_template(template_string)
+
+
+
 
 if translate_button:
     with st.spinner('Translating...'):
@@ -203,11 +238,14 @@ if translate_button:
         response = translated_response.content
         st.session_state.responses.append(response)
         current_response = response.replace('```', '')
-        st.write(current_response)
+        
+        st.markdown(" :violet[your translation:]")
+        
+        container_with_border(current_response)
                 
-        history = st.expander("response history")
+        history = st.sidebar.expander("text translations")
         with history:
             for i in range(len(st.session_state.responses)):
                 response_text = st.session_state.responses[i].replace('```', '')
                 st.write(response_text)
-style_selection_placeholder.selectbox("your styles", [''] + st.session_state.saved_styles)
+style_selection_placeholder.selectbox("previously entered styles", ['styles used'] + st.session_state.saved_styles)
